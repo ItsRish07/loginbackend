@@ -27,7 +27,9 @@ GL1/
 
 CREATE DATABASE glaciolive_db;
 
-# Navigate to the backend/ directory and create a .env file: replace "YOUR_USER" and "YOUR_PASSWORD" with your connection name nd password
+# env file
+
+Navigate to the backend/ directory and create a .env file: replace "YOUR_USER" and "YOUR_PASSWORD" with your connection name nd password
 
 DATABASE_URL=mysql+pymysql://YOUR_USER:YOUR_PASSWORD@localhost:3306/glaciolive_db 
 SECRET_KEY=your_very_secret_key_here
@@ -53,4 +55,5 @@ python -m uvicorn app.main:app --reload
 
 JWT Authentication: Secure token-based sessions.
 Bcrypt Hashing: Passwords are never stored in plain text.
+
 CORS Middleware: Configured to allow frontend-backend communication.
