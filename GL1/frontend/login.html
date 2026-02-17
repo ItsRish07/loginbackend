@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Login - GlacioLive</title>
+  
+  <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --primary: #4fc3f7;
+      --secondary: #0077b6;
+      --shadow: 0 15px 35px rgba(0,0,0,0.2);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Josefin Sans', sans-serif;
+    }
+    
+    body {
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+      padding-top: 20px;
+      padding-bottom: 20px;
+      background: #0a192f;
+    }
+
+    .container {
+      position: relative;
+      width: 400px;
+      max-width: 90%;
+      height: 640px;
+      perspective: 1000px;
+    }
+
+    .form-box {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      border-radius: 20px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      transition: transform 0.8s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+      backface-visibility: hidden;
+    }
+    
+    .login-box { transform: rotateY(0deg); z-index: 2; }
+    .register-box { transform: rotateY(180deg); z-index: 1; }
+    .phone-box { transform: rotateY(-180deg); z-index: 1; }
+    .forgot-box { transform: rotateX(180deg); z-index: 1; }
+
+    .container.show-register .login-box { transform: rotateY(-180deg); z-index: 1; }
+    .container.show-register .register-box { transform: rotateY(0deg); z-index: 2; }
+    
+    .container.show-phone .login-box { transform: rotateY(180deg); z-index: 1; }
+    .container.show-phone .phone-box { transform: rotateY(0deg); z-index: 2; }
+    
+    .container.show-forgot .login-box { transform: rotateX(-180deg); z-index: 1; }
+    .container.show-forgot .forgot-box { transform: rotateX(0deg); z-index: 2; }
+
+    .form-content {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      padding: 40px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      background: #112240;
+    }
+
+    h3, h2 {
+      font-size: 2.2em;
+      font-weight: 300;
+      text-align: center;
+      margin-bottom: 20px;
+      position: relative;
+      color: #ffffff;
+    }
+    
+    h3 span { color: var(--primary); font-weight: 600; }
+    
+    h3::after, h2::after {
+      content: '';
+      width: 60px;
+      height: 4px;
+      position: absolute;
+      bottom: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      border-radius: 2px;
+      background: var(--primary);
+    }
+    
+    .input-group {
+      position: relative;
+      margin: 20px 0;
+      padding-top: 5px;
+      padding-bottom: 5px;
+    }
+
+    .input-group input {
+      width: 100%;
+      padding: 15px 20px;
+      font-size: 1em;
+      border: none;
+      border-radius: 50px;
+      outline: none;
+      transition: 0.3s;
+      background: #0a1a2e;
+      color: #fff;
+    }
+
+    .input-group label {
+      position: absolute;
+      top: 50%;
+      left: 20px;
+      transform: translateY(-50%);
+      font-size: 1em;
+      pointer-events: none;
+      transition: 0.3s;
+      color: #aaa;
+    }
+
+    .input-group input:focus ~ label,
+    .input-group input:valid ~ label {
+      top: -10px;
+      left: 15px;
+      font-size: 0.8em;
+      padding: 0 8px;
+      font-weight: 600;
+      background: #112240;
+      color: #4fc3f7;
+    }
+
+    /* RESTORED: Main Button Hover */
+    .btn {
+      width: 100%;
+      padding: 15px;
+      border: none;
+      border-radius: 50px;
+      font-size: 1.1em;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.4s;
+      margin-top: 10px;
+      background: linear-gradient(90deg, #4fc3f7, #0077b6);
+      color: #fff;
+    }
+    .btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 25px rgba(110, 142, 251, 0.5);
+    }
+
+    /* RESTORED: Google Button Hover */
+    .google-btn {
+      width: 100%;
+      padding: 15px;
+      border: 1px solid #ddd;
+      border-radius: 50px;
+      font-size: 1em;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.3s;
+      margin-top: 15px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      background: #fff;
+      color: #333;
+    }
+    .google-btn:hover {
+      transform: translateY(-3px);
+      border-color: #aaa;
+      box-shadow: 0 10px 25px rgba(110, 142, 251, 0.5);
+    }
+
+    /* RESTORED: Phone Button Hover */
+    .phone-btn {
+      width: 100%;
+      padding: 12px;
+      background: #34a853;
+      border: none;
+      border-radius: 50px;
+      color: white;
+      font-size: 1em;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.3s;
+      margin-top: 10px;
+    }
+    .phone-btn:hover {
+      background: #2c8e45;
+    }
+
+    /* RESTORED: Link Button Hover */
+    .link-btn {
+      display: block;
+      width: 100%;
+      padding: 15px;
+      background: #259c53;
+      border-radius: 50px;
+      color: #ffffff;
+      font-size: 1em;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.3s;
+      margin-top: 15px;
+      text-align: center;
+      text-decoration: none;
+    }
+    .link-btn:hover {
+      background: #2c8e45;
+      transform: translateY(-3px);
+      box-shadow: 0 10px 25px rgba(110, 142, 251, 0.5);
+    }
+
+    .link {
+      text-align: center;
+      margin-top: 20px;
+      font-size: 0.9em;
+      color: #e0e7ef;
+    }
+    
+    .link a {
+      text-decoration: none;
+      font-weight: 600;
+      cursor: pointer;
+      color: #4fc3f7;
+    }
+
+    .toast {
+      position: fixed;
+      top: 20px; 
+      right: 20px;
+      background: #4caf50;
+      color: white;
+      padding: 15px 25px;
+      border-radius: 10px;
+      font-weight: 600;
+      opacity: 0;
+      transform: translateX(100%);
+      transition: all 0.5s;
+      z-index: 2000;
+    }
+    .toast.show { opacity: 1; transform: translateX(0); }
+    .toast.error { background: #f44336; }
+  </style>
+</head>
+<body>
+
+  <div class="container" id="container">
+  
+    <div class="form-box login-box">
+      <div class="form-content">
+        <h3>Sign in to <div class="logo"><span>Glacio</span>Live</div></h3>
+        <form id="loginForm">
+          <div class="input-group">
+            <input type="email" id="loginEmail" required />
+            <label>Email</label>
+          </div>
+          <div class="input-group">
+            <input type="password" id="loginPassword" required />
+            <label>Password</label>
+          </div>
+          <div style="text-align: right; margin-bottom: 10px;">
+             <a id="showForgot" style="color: #aaa; font-size: 0.9em; cursor: pointer;">Forgot Password?</a>
+          </div>
+          <button type="submit" class="btn">Login</button>
+        </form>
+        
+        <button type="button" class="google-btn">
+          <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="20">
+          Sign in with Google
+        </button>
+
+        <button type="button" class="phone-btn" id="showPhoneLogin">
+          Sign in with Phone
+        </button>
+        
+        <a href="index.html" class="link-btn">Back to Home Page</a>
+        
+        <div class="link">
+          New here? <a id="showRegister">Create an account</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-box register-box">
+      <div class="form-content">
+        <h2>Join Us Today</h2>
+        <form id="registerForm">
+          <div class="input-group">
+            <input type="text" id="registerName" required />
+            <label>Full Name</label>
+          </div>
+          <div class="input-group">
+            <input type="email" id="registerEmail" required />
+            <label>Email</label>
+          </div>
+          <div class="input-group">
+            <input type="password" id="registerPassword" required />
+            <label>Password</label>
+          </div>
+          <button type="submit" class="btn">Register</button>
+        </form>
+        
+        <a href="index.html" class="link-btn">Back to Home Page</a>
+
+        <div class="link">
+          Already have an account? <a id="showLoginFromRegister">Sign in</a>
+        </div>
+      </div>
+    </div>
+    
+    <div class="form-box phone-box">
+      <div class="form-content">
+        <h2>Phone Login</h2>
+        <form id="phoneForm">
+          <div class="input-group">
+            <input type="tel" id="phoneNumber" placeholder="+91" required />
+            <label>Phone Number</label>
+          </div>
+          <button type="submit" class="btn">Send OTP</button>
+        </form>
+        <div class="link">
+          Back to <a id="showLoginFromPhone">Email Login</a>
+        </div>
+      </div>
+    </div>
+    
+    <div class="form-box forgot-box">
+      <div class="form-content">
+        <h2>Reset Password</h2>
+        <div class="input-group">
+          <input type="email" id="forgotEmail" required />
+          <label>Email Address</label>
+        </div>
+        <button type="submit" class="btn">Send Reset Link</button>
+        <div class="link">
+          Remembered it? <a id="hideForgot">Back to Login</a>
+        </div>
+      </div>
+    </div>
+    
+  </div>
+
+  <div class="toast" id="toastMsg">Action completed.</div>
+
+  <script>
+    const API_BASE_URL = "http://127.0.0.1:8000"; 
+    const container = document.getElementById('container');
+    const toastMsg = document.getElementById('toastMsg');
+
+    document.getElementById('showRegister').onclick = () => container.className = 'container show-register';
+    document.getElementById('showPhoneLogin').onclick = () => container.className = 'container show-phone';
+    document.getElementById('showForgot').onclick = () => container.className = 'container show-forgot';
+    
+    const backButtons = ['showLoginFromRegister', 'showLoginFromPhone', 'hideForgot'];
+    backButtons.forEach(id => {
+        document.getElementById(id).onclick = () => container.className = 'container';
+    });
+
+    function showToast(message, isError = false) {
+      toastMsg.textContent = message;
+      toastMsg.className = isError ? 'toast show error' : 'toast show';
+      setTimeout(() => toastMsg.classList.remove('show'), 3000);
+    }
+
+    document.getElementById('loginForm').onsubmit = async (e) => {
+      e.preventDefault();
+      const email = document.getElementById('loginEmail').value;
+      const password = document.getElementById('loginPassword').value;
+
+      try {
+        const res = await fetch(`${API_BASE_URL}/auth/login`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password })
+        });
+        const data = await res.json();
+        if (res.ok) {
+          localStorage.setItem('access_token', data.access_token);
+          showToast(`Welcome, ${data.user_name}!`);
+          setTimeout(() => window.location.href = "index.html", 1000);
+        } else {
+          showToast(data.detail || "Login failed", true);
+        }
+      } catch (err) { showToast("Server error", true); }
+    };
+
+    document.getElementById('registerForm').onsubmit = async (e) => {
+      e.preventDefault();
+      const full_name = document.getElementById('registerName').value;
+      const email = document.getElementById('registerEmail').value;
+      const password = document.getElementById('registerPassword').value;
+
+      try {
+        const res = await fetch(`${API_BASE_URL}/auth/register`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ full_name, email, password })
+        });
+        if (res.ok) {
+          showToast("Account created! Please login.");
+          container.className = 'container';
+        } else {
+          const data = await res.json();
+          showToast(data.detail || "Registration failed", true);
+        }
+      } catch (err) { showToast("Server error", true); }
+    };
+  </script>
+</body>
+</html>
