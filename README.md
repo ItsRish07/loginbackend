@@ -3,24 +3,41 @@
 ## 🛠 Project Structure
 
 GL1/
-├── backend/
-│   ├── app/
-│   │   ├── __init__.py      # Required for package recognition
-│   │   ├── main.py          # FastAPI entry point
-│   │   ├── database.py      # SQLAlchemy & MySQL config
-│   │   ├── crud.py          # Database operations
-│   │   ├── models.py        # SQLAlchemy models
-│   │   ├── schemas.py       # Pydantic schemas
-│   │   ├── routes/
-│   │   │   ├── __init__.py
-│   │   │   └── auth.py      # Auth endpoints
-│   │   └── utils/
-│   │       ├── auth.py      # JWT logic
-│   │       └── hashing.py   # Password encryption
-│   ├── .env                 # Database credentials (Secret)
-│   └── requirements.txt     # Dependencies
-└── frontend/
-    └── login.html           # 3D UI & Logic
+
+    backend/
+    
+        app/
+        
+         __init__.py      # Required for package recognition
+         
+         main.py          # FastAPI entry point
+
+         database.py      # SQLAlchemy & MySQL config
+         crud.py          # Database operations
+         
+         models.py        # SQLAlchemy models
+         
+         schemas.py       # Pydantic schemas
+         
+         routes/
+
+             __init__.py
+             
+             auth.py      # Auth endpoints
+             
+         utils/
+         
+             auth.py      # JWT logic
+             
+             hashing.py   # Password encryption
+             
+         .env                 # Database credentials (Secret)
+         
+         requirements.txt     # Dependencies
+         
+     frontend/
+     
+    login.html           # 3D UI & Logic
 
 
 # Ensure u have mysql installed, create following database
@@ -54,6 +71,8 @@ python -m uvicorn app.main:app --reload
 # Security Features
 
 JWT Authentication: Secure token-based sessions.
+
 Bcrypt Hashing: Passwords are never stored in plain text.
 
 CORS Middleware: Configured to allow frontend-backend communication.
+
